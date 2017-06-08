@@ -1,11 +1,12 @@
-FROM gcr.io/google_appengine/python
+FROM continuumio/anaconda3
 
-RUN virtualenv -p python3.6 /env
-ENV PATH /env/bin:$PATH
+# Ensure that Python outputs everything that's printed inside
+# the application rather than buffering it.
+ENV PYTHONUNBUFFERED 1
 
-ADD requirements.txt /app/requirements.txt
-RUN /env/bin/pip install -r /app/requirements.txt
+RUN mkdir /app
+ADD requirements.txt /app/
+RUN pip install -r /app/requirements.txt
 ADD . /app
 
-CMD gunicorn -b :8000 stats.wsgi
-
+CMD gunicorn -b :8000 stats.wsgi --chdir /app
