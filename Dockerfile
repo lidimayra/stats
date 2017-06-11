@@ -5,8 +5,15 @@ FROM continuumio/anaconda3
 ENV PYTHONUNBUFFERED 1
 
 RUN mkdir /app
-ADD requirements.txt /app/
-RUN pip install -r /app/requirements.txt
-ADD . /app
 
-CMD gunicorn -b :8000 stats.wsgi --chdir /app
+# Execute future commands from /app folder
+WORKDIR /app
+
+COPY requirements.txt ./
+RUN pip install -r ./requirements.txt
+
+# Copy everthing from current directory relative to the Dockerfile, over to
+# working directory (/app)
+COPY . .
+
+CMD gunicorn -b :8000 stats.wsgi
