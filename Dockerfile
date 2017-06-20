@@ -16,4 +16,4 @@ RUN pip install -r ./requirements.txt
 # working directory (/app)
 COPY . .
 
-CMD gunicorn -b :8000 stats.wsgi
+CMD ["gunicorn", "-b", ":8000", "stats.wsgi"]
